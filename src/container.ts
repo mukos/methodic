@@ -1,5 +1,3 @@
-import { handleError } from "./error";
-
 class Container<Type>{
     private readonly container: {[key: string]: Type};
 
@@ -13,14 +11,14 @@ class Container<Type>{
 
     getEntry(key: string){
         if(!this.container[key]){
-            handleError('Entry Does Not Exist');
+            throw new Error('Entry Does Not Exist');
         }
         return this.container[key];
     }
 
     addEntry(key: string, value: Type){
         if(this.container[key]){
-            handleError('Entry Already Exists');
+            throw new Error('Entry Already Exists');
         }
         this.container[key] = value;
     }

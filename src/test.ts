@@ -2,7 +2,7 @@
 
 import App from "./app";
 
-function testApp(){
+export default function testApp(){
     const app = new App();
 
     app.addDependencies({
@@ -28,5 +28,3 @@ function testApp(){
 
     app.start("method2");
 }
-
-// testApp();

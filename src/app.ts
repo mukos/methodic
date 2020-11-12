@@ -1,10 +1,14 @@
 import Container from "./container";
 import EventEmitter from "eventemitter3";
-import EVENTS from "./events";
 
 type State = { [key: string]: any };
 type Method = (states: Container<State>, methods: Container<Method>, dependencies: Container<Function>) => unknown;
 type Func = (statesObject: object, methodsObject: object, dependenciesObject: object) => unknown;
+
+enum EVENTS {
+    BEFORE = "BEFORE",
+    AFTER = "AFTER"
+}
 
 class App extends EventEmitter {
     private readonly states: Container<State>;
