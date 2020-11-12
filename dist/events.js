@@ -1,5 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AFTER = exports.BEFORE = void 0;
-exports.BEFORE = "BEFORE";
-exports.AFTER = "AFTER";
+var EVENTS;
+(function (EVENTS) {
+    EVENTS["BEFORE"] = "BEFORE";
+    EVENTS["AFTER"] = "AFTER";
+})(EVENTS || (EVENTS = {}));
+exports.default = EVENTS;

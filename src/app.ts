@@ -1,6 +1,6 @@
 import Container from "./container";
 import EventEmitter from "eventemitter3";
-import { BEFORE, AFTER } from "./events";
+import EVENTS from "./events";
 
 type State = { [key: string]: any };
 type Method = (states: Container<State>, methods: Container<Method>, dependencies: Container<Function>) => unknown;
@@ -10,11 +10,13 @@ class App extends EventEmitter {
     private readonly states: Container<State>;
     private readonly methods: Container<Method>;
     private readonly dependencies: Container<Function>;
-    private readonly config: object;
+    private readonly config: object|undefined;
 
-    constructor(config: object) {
+    constructor(config?: object) {
         super();
-        this.config = Object.freeze(config);
+        if(config){
+            this.config = Object.freeze(config);
+        }
         this.states = new Container<State>();
         this.methods = new Container<Method>();
         this.dependencies = new Container<Function>();
@@ -27,10 +29,10 @@ class App extends EventEmitter {
 
     addLogger(logger: (message: string) => void, config?: { before: boolean, after: boolean }){
         if(!config || config && config.before){
-            this.addListener(BEFORE, logger);
+            this.addListener(EVENTS.BEFORE, logger);
         }
         if(!config || config && config.after){
-            this.addListener(AFTER, logger);
+            this.addListener(EVENTS.AFTER, logger);
         }
     }
 
@@ -40,9 +42,9 @@ class App extends EventEmitter {
 
     addMethod(name: string, method: Func){
         this.methods.addEntry(name, async () => {
-            this.emit(BEFORE, { event: BEFORE, name });
+            this.emit(EVENTS.BEFORE, { event: EVENTS.BEFORE, name });
             await method(this.getStates(), this.getMethods(), this.getDependencies());
-            this.emit(AFTER, { event: AFTER, name });
+            this.emit(EVENTS.AFTER, { event: EVENTS.AFTER, name });
         });
     }
 

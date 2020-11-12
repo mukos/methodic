@@ -54,12 +54,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var container_1 = __importDefault(require("./container"));
 var eventemitter3_1 = __importDefault(require("eventemitter3"));
-var events_1 = require("./events");
+var events_1 = __importDefault(require("./events"));
 var App = /** @class */ (function (_super) {
     __extends(App, _super);
     function App(config) {
         var _this = _super.call(this) || this;
-        _this.config = Object.freeze(config);
+        if (config) {
+            _this.config = Object.freeze(config);
+        }
         _this.states = new container_1.default();
         _this.methods = new container_1.default();
         _this.dependencies = new container_1.default();
@@ -71,10 +73,10 @@ var App = /** @class */ (function (_super) {
     };
     App.prototype.addLogger = function (logger, config) {
         if (!config || config && config.before) {
-            this.addListener(events_1.BEFORE, logger);
+            this.addListener(events_1.default.BEFORE, logger);
         }
         if (!config || config && config.after) {
-            this.addListener(events_1.AFTER, logger);
+            this.addListener(events_1.default.AFTER, logger);
         }
     };
     App.prototype.addState = function (name, state) {
@@ -86,11 +88,11 @@ var App = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.emit(events_1.BEFORE, { event: events_1.BEFORE, name: name });
+                        this.emit(events_1.default.BEFORE, { event: events_1.default.BEFORE, name: name });
                         return [4 /*yield*/, method(this.getStates(), this.getMethods(), this.getDependencies())];
                     case 1:
                         _a.sent();
-                        this.emit(events_1.AFTER, { event: events_1.AFTER, name: name });
+                        this.emit(events_1.default.AFTER, { event: events_1.default.AFTER, name: name });
                         return [2 /*return*/];
                 }
             });

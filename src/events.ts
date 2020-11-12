@@ -1,2 +1,6 @@
-export const BEFORE = "BEFORE";
-export const AFTER = "AFTER";
+enum EVENTS {
+    BEFORE = "BEFORE",
+    AFTER = "AFTER"
+}
+
+export default EVENTS
