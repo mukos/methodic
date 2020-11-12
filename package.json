@@ -1,0 +1,31 @@
+{
+  "name": "methodic",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc -p .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mukos/methodic.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mukos/methodic/issues"
+  },
+  "homepage": "https://github.com/mukos/methodic#readme",
+  "devDependencies": {
+    "@types/node": "^14.14.7",
+    "nodemon": "^2.0.6",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "eventemitter3": "^4.0.7"
+  }
+}
