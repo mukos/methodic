@@ -15,16 +15,24 @@ export default function testApp(){
 
     app.addState('state1', { a: '1', b: '2' });
 
-    app.addMethod('method1', ({ state1 }) => {
-        state1.a = "z";
+    app.addFunction('method1', (a, b, c) => {
+        return a + b + c;
     });
 
-    app.addMethod('method2', ({ state1, state2 }, { method1 }, { EventEmitter }) => {
-        console.log(typeof EventEmitter);
+    app.addFunction('method2', ({ state1 }) => {
+        state1.a = "x";
+    });
+
+    app.addFunction('method3', ({ state1 }, { method1, method2 }, { EventEmitter }) => {
+        console.log(typeof EventEmitter); // dependency
+        const sum = method1(1, 2, 3); // helper
+        console.log("sum: ", sum);
         console.log("state1: ", state1)
-        method1(); // changes state1
+        method2(); // changes state
         console.log("state1: ", state1);
     });
 
-    app.start("method2");
+    app.run("method3");
 }
+
+// testApp();
