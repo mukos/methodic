@@ -2,8 +2,8 @@ import Container from "./container";
 import EventEmitter from "eventemitter3";
 
 type State = {[key: string]: any};
-type Config = {[key: string]: string|number|null|Config|[Config]}
 type Func = (...args: any[]) => unknown;
+type Config = {[key: string]: string|number|null|Config|[Config]}
 
 enum EVENTS {
     BEFORE = "BEFORE",
@@ -11,7 +11,7 @@ enum EVENTS {
 }
 
 class App {
-    private EE: EventEmitter;
+    private readonly EE: EventEmitter;
     public readonly states: Container<State>;
     public readonly functions: Container<Func>;
     public readonly dependencies: Container<Function>;
@@ -45,7 +45,7 @@ class App {
 
     private wrapFunction(func: Func, handler?: (error: Error) => unknown){
         if(handler){
-            return async (...args: any[]) => {
+            return (...args: any[]) => {
                 try {
                     return func(...args);
                 } catch (error) {
@@ -56,19 +56,20 @@ class App {
         return func;
     }
 
-    addFunction(name: string, fun: Func, handler?: (error: Error) => unknown){
-        const func = async (...args: any[]) => {
+    addFunction(name: string, func: Func, handler?: (error: Error) => unknown){
+        this.functions.add(name, this.wrapFunction((...args: any[]) => {
             this.EE.emit(EVENTS.BEFORE, { event: EVENTS.BEFORE, name });
-            const params = args.length === 0 ? [this.states.container, this.functions.container, this.dependencies.container] : args;
-            const result = await fun(...params);
+            let result = func(this.states.container, this.functions.container, this.dependencies.container);
+            if(typeof result === 'function'){
+                result = result(...args);
+            }
             this.EE.emit(EVENTS.AFTER, { event: EVENTS.AFTER, name });
             return result;
-        }
-        this.functions.add(name, this.wrapFunction(func, handler));
+        }, handler));
     }
 
     addDependencies(deps: { [key: string]: Function }){
-        for( const name in deps ){
+        for(const name in deps){
             this.dependencies.add(name, deps[name]);
         }
     }

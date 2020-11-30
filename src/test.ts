@@ -15,7 +15,7 @@ export default function testApp(){
 
     app.addState('state1', { a: '1', b: '2' });
 
-    app.addFunction('method1', (a, b, c) => {
+    app.addFunction('method1', () => (a,b,c) => {
         return a + b + c;
     });
 
@@ -35,4 +35,4 @@ export default function testApp(){
     app.run("method3");
 }
 
-// testApp();
+testApp();
