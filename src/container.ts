@@ -5,6 +5,10 @@ class Container<Type> {
         this.container = contents;
     }
 
+    has(key: string){
+        return this.container[key] !== undefined;
+    }
+
     get(key: string){
         if(!this.container[key]){
             throw new Error('Entry Does Not Exist');
