@@ -1,32 +1,36 @@
-class Container<Type> {
-    public readonly container: {[key: string]: Type}
+import { MapInterface, TypedObject } from "./types";
 
-    constructor(contents: {} = {}) {
-        this.container = contents;
+class Container<Type> implements MapInterface<Type> {
+    public readonly content: TypedObject<Type>
+
+    constructor(content: TypedObject<Type> = {}) {
+        this.content = content;
     }
 
     has(key: string){
-        return this.container[key] !== undefined;
+        return this.content[key] !== undefined;
     }
 
     get(key: string){
-        if(!this.container[key]){
+        if(!this.content[key]){
             throw new Error('Entry Does Not Exist');
         }
-        return this.container[key];
+        return this.content[key];
     }
 
-    add(key: string, value: Type){
-        if(this.container[key]){
+    add(key: string, value: Type) {
+        if(this.content[key]){
             throw new Error('Entry Already Exists');
         }
-        this.container[key] = value;
+        this.content[key] = value;
     }
 
     remove(key: string){
-        if(this.container[key]){
-            delete this.container[key];
+        if(this.content[key]){
+            delete this.content[key];
+            return true;
         }
+        return false;
     }
 }
 

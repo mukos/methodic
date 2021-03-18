@@ -59,7 +59,7 @@ class App {
     addFunction(name: string, func: Func, handler?: (error: Error) => unknown){
         this.functions.add(name, this.wrapFunction((...args: any[]) => {
             this.EE.emit(EVENTS.BEFORE, { event: EVENTS.BEFORE, name });
-            let result = func(this.states.container, this.functions.container, this.dependencies.container);
+            let result = func(this.states.content, this.functions.content, this.dependencies.content);
             if(typeof result === 'function'){
                 result = result(...args);
             }

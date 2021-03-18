@@ -1,5 +1,3 @@
-// @ts-nocheck TS2339
-
 import App from "./app";
 
 export default function testApp(){
@@ -15,7 +13,7 @@ export default function testApp(){
 
     app.addState('state1', { a: '1', b: '2' });
 
-    app.addFunction('method1', () => (a,b,c) => {
+    app.addFunction('method1', () => (a: number, b: number, c: number) => {
         return a + b + c;
     });
 
@@ -32,7 +30,93 @@ export default function testApp(){
         console.log("state1: ", state1);
     });
 
-    app.run("method3");
+    // app.run("method3");
 }
 
-testApp();
+class ExtensibleFunction extends Function {
+    constructor(f: Function) {
+        super();
+        return Object.setPrototypeOf(f, new.target.prototype);
+    }
+}
+
+class X extends Function {
+    constructor(fun: Function) {
+        super();
+        fun.bind(this.arguments);
+        return fun;
+    }
+    // call(this: Function, thisArg: any, ...argArray: any[]): any {
+    //     console.log("HELLO");
+    //     this(...argArray);
+    // }
+}
+
+class B extends Object {
+    // @ts-ignore
+    [s: string] : Function;
+    constructor(s: string) {
+        super({
+            [s]: () => {
+                console.log("ahahahh")
+            }
+        });
+    }
+}
+
+function Test(s: string){
+    return class X {
+        // [a: string] : string;
+        // methods: [] = new Array('0');
+        // sym: Symbol
+        // constructor(s: string) {
+        //     this.sym = Symbol(s);
+            // this.methods.push(met);
+        // }
+        get [s](){
+            console.log('hahaha');
+            return true;
+        }
+    }
+}
+
+class Container<Type> extends Object {
+    // @ts-ignore
+    [s: string] : Type
+    constructor(content: Object) {
+        super(content);
+        return new Proxy(this, {
+            get(object, property){
+                if (!Reflect.has(object, property)) {
+                    throw new Error('NOT EXIST');
+                } else {
+                    return Reflect.get(object, property);
+                }
+            },
+            set(object, property, value){
+                if (Reflect.has(object, property)) {
+                    throw new Error('YES EXIST');
+                } else {
+                    return Reflect.set(object, property, value);
+                }
+            }
+        });
+    }
+}
+
+function testApp2(){
+    // const a = new X(() => { console.log("hehe")});
+    // a();
+    // const x = new B("hello");
+    // const a = new (Test("z"));
+    // @ts-ignore
+    // const x = a['z'];
+    const a = new Container<number>();
+    // @ts-ignore
+    a['asd'] = 3;
+    console.log(a.asd);
+    // console.log(a['asd']);
+
+}
+
+testApp2();
