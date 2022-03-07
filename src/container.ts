@@ -1,36 +1,31 @@
-import { MapInterface, TypedObject } from "./types";
-
-class Container<Type> implements MapInterface<Type> {
-    public readonly content: TypedObject<Type>
-
-    constructor(content: TypedObject<Type> = {}) {
-        this.content = content;
-    }
-
-    has(key: string){
-        return this.content[key] !== undefined;
-    }
-
-    get(key: string){
-        if(!this.content[key]){
-            throw new Error('Entry Does Not Exist');
-        }
-        return this.content[key];
-    }
-
-    add(key: string, value: Type) {
-        if(this.content[key]){
-            throw new Error('Entry Already Exists');
-        }
-        this.content[key] = value;
-    }
-
-    remove(key: string){
-        if(this.content[key]){
-            delete this.content[key];
-            return true;
-        }
-        return false;
+class Container<Type> extends Object {
+    // @ts-ignore
+    [s: string] : Type
+    constructor(content: Object = {}) {
+        super(content);
+        return new Proxy(this, {
+            get(object, property){
+                if (!Reflect.has(object, property)) {
+                    throw new Error('Entry Does Not Exist');
+                }
+                return Reflect.get(object, property);
+            },
+            set(object, property, value){
+                if (Reflect.has(object, property)) {
+                    throw new Error('Entry Already Exists');
+                }
+                return Reflect.set(object, property, value);
+            },
+            has(object, property){
+                return Reflect.has(object, property)
+            },
+            deleteProperty(object, property){
+                if (!Reflect.has(object, property)) {
+                    throw new Error('Entry Does Not Exist');
+                }
+                return Reflect.deleteProperty(object, property)
+            }
+        });
     }
 }
 
