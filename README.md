@@ -1,3 +1,5 @@
 # Methodic
 
-## Work in progress
+## Lightweight functional framework utilizing dependency injection
+
+(work in progress)
