@@ -5,6 +5,10 @@ type State = Record<string, any>;
 type Func = (...args: any[]) => unknown;
 type Config = Record<string, NonNullable<any>>
 
+// TODO add errors
+
+const INIT_RUN = 'init'
+
 enum EVENTS {
     BEFORE = "BEFORE",
     AFTER = "AFTER"
@@ -30,8 +34,11 @@ class App {
         this.dependencies = new Container<Function>();
     }
 
-    run(functionName: string, params: any[] = []){
+    run(functionName: string = INIT_RUN, params: any[] = []){
         const func = this.functions[functionName];
+        if(typeof func !== 'function'){
+            throw new Error(`Function ${func} does not exist`);
+        }
         func(...params);
     }
 

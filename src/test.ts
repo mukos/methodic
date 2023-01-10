@@ -1,5 +1,7 @@
 import App from "./app";
 
+// TODO create application
+
 export default function testApp(){
     const app = new App();
 
